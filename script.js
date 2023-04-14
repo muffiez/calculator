@@ -102,3 +102,8 @@ const compute = () => {
     operator = undefined;
     previousOperand = '';
 }
+
+
+    // add message if divide by zero
+    // add rounding Math.round((ans + Number.EPSILON) * 100) / 100;
+   
