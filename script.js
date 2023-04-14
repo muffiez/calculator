@@ -1,14 +1,22 @@
 let currentOperand = '';
 let previousOperand = '';
+let operator = undefined;
 
 const appendNums = (num) => {
     if(num === '.' && currentOperand.includes('.')) return;
     currentOperand = currentOperand.toString() + num.toString();
 }
 
-const getOperator = (operator) => {
-
+const getOperator = (operation) => {
+    if(currentOperand === '') return;
+    if(previousOperand !== '') {
+        compute();
+    }
+    operator = operation;
+    previousOperand = currentOperand;
+    currentOperand = '';
 }
+
 const clear = () => {
     currentOperand = '';
     previousOperand = '';
@@ -16,16 +24,18 @@ const clear = () => {
 }
 
 const del = () => {
-
+    currentOperand = currentOperand.toString().slice(0, -1);
 }
-
-const getplusMinus = () => {
-
-}
-
 
 const updateDisplay = () => {
     currentOperandText.innerHTML = currentOperand;
+    console.log()
+    if (operator !== undefined) {
+        previousOperandText.innerHTML = `${previousOperand} ${operator}`;
+    }
+    else {
+        previousOperandText.innerHTML = '';
+    }
 }
 
 const clearButton = document.querySelector('[data-clear]');
@@ -47,39 +57,48 @@ numButtons.forEach(button => {
 
 operatorButtons.forEach(button => { 
     button.addEventListener('click', () => {
+        getOperator(button.value);
+        updateDisplay();
+    });
+});
 
+equalButton.addEventListener('click', () => {
+    compute();
+    updateDisplay();
+});
 
+clearButton.addEventListener('click', () => {
+    clear();
+    updateDisplay();
+});
 
-const add = (a, b) => {
-    return a + b;
-}
-const sub = (a, b) => {
-    return a - b;
-}
-const multiply = (a, b) => {
-    return a * b;
-}
-const divide = (a, b) => {
-    if(b == 0) {
-        return 'Zero';
-    }
-    
-    return a / b;
-    
+delButton.addEventListener('click', () => {
+    del();
+    updateDisplay();
+});
 
-}
-
-const compute = (num1, num2, operator) => {
+const compute = () => {
+    let result;
+    const previous = parseFloat(previousOperand);
+    const current = parseFloat(currentOperand);
+    if (isNaN(previous) || isNaN(current)) return;
     switch (operator) {
         case '+':
-            return add(num1, num2);
+            result = previous + current;
+            break;
         case '-':
-            return sub(num1, num2);
+            result = previous - current;
+            break;
         case 'x':
-            return multiply(num1, num2);
+            result = previous * current;
+            break;
         case '÷':
-            return divide(num1, num2);
+            result = previous / current;
+            break;
         default:
             throw new Error("Input Error");
     }
+    currentOperand = result;
+    operator = undefined;
+    previousOperand = '';
 }
