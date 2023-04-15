@@ -93,17 +93,23 @@ const compute = () => {
             result = previous * current;
             break;
         case '÷':
-            result = previous / current;
+            if(current === 0) {
+                result = 'Don\'t Divide By 0!';
+            }
+            else {
+                result = previous / current;
+            }
             break;
         default:
             throw new Error("Input Error");
     }
-    currentOperand = result;
+    if(typeof(result) === 'number' ){
+        currentOperand = Math.round((result + Number.EPSILON) * 100) / 100;
+    }
+    else {
+        currentOperand = result;
+    }
     operator = undefined;
     previousOperand = '';
 }
 
-
-    // add message if divide by zero
-    // add rounding Math.round((ans + Number.EPSILON) * 100) / 100;
-   
