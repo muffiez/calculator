@@ -1,6 +1,7 @@
 body {
     display: flex;
     justify-content: center;
+    background-color: white
 }
 .calc-grid {
     display: grid;
@@ -9,7 +10,7 @@ body {
     min-height: 50vh;
     border: solid grey;
     border-radius: 15px;
-    margin:auto;
+    padding: 20px
 }
 
 .span-2 {
@@ -52,6 +53,8 @@ button:hover {
     word-wrap: break-word;
     word-break: break-all;
     border-radius: 15px;
+    margin-bottom: 20px;
+    min-height: 120px;
 }
 
 .previous-output,
@@ -62,7 +65,7 @@ button {
 }
 
 .previous-output{
-    font-size: 25px;
+    font-size: 20px;
 }
 .current-output {
     font-size: 45px;

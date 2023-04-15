@@ -3,7 +3,7 @@ let previousOperand = '';
 let operator = undefined;
 
 const appendNums = (num) => {
-    if (num === '.' && currentOperand.includes('.')) return;
+    if (num === '.' && currentOperand.toString().includes('.')) return;
     currentOperand = currentOperand.toString() + num.toString();
 }
 
