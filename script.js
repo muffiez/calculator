@@ -3,16 +3,22 @@ let previousOperand = '';
 let operator = undefined;
 
 const appendNums = (num) => {
-    if(num === '.' && currentOperand.includes('.')) return;
+    if (num === '.' && currentOperand.includes('.')) return;
     currentOperand = currentOperand.toString() + num.toString();
 }
 
 const getOperator = (operation) => {
-    if(currentOperand === '') return;
-    if(previousOperand !== '') {
+    if (currentOperand === '') return;
+    if (previousOperand !== '') {
         compute();
     }
     operator = operation;
+    if (operator === '*') {
+        operator = 'x';
+    }
+    if (operator === '/') {
+        operator = '÷';
+    }
     previousOperand = currentOperand;
     currentOperand = '';
 }
@@ -29,7 +35,6 @@ const del = () => {
 
 const updateDisplay = () => {
     currentOperandText.innerHTML = currentOperand;
-    console.log()
     if (operator !== undefined) {
         previousOperandText.innerHTML = `${previousOperand} ${operator}`;
     }
@@ -38,6 +43,45 @@ const updateDisplay = () => {
     }
 }
 
+const finalDisplayUpdate = () => {
+    if (isNaN(previous) || isNaN(current)) return;
+    if (typeof(currentOperand) === 'string') {
+        currentOperandText.innerHTML = currentOperand;
+        operator = undefined;
+        previousOperand = '';
+        currentOperand = '';
+    }
+    else {
+        previousOperandText.innerHTML = `${previous} ${operator} ${current}`;
+        currentOperandText.innerHTML = currentOperand;
+        operator = undefined;
+        previousOperand = '';
+    }
+}
+
+let keyboardInput = (e) => {
+    if (e.key >= 0 && e.key <= 9 || e.key === '.') {
+        appendNums(e.key);
+        updateDisplay();
+    }
+    if (e.key === '=' || e.key === 'Enter') {
+        compute();
+        finalDisplayUpdate();
+    }
+    if (e.key === 'Backspace' || e.key === 'Delete') {
+        del();
+        updateDisplay();
+    }
+    if (e.key === 'Escape') {
+        clear();
+        updateDisplay();
+    }
+    if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
+        getOperator(e.key);
+        updateDisplay();
+    }
+}
+  
 const clearButton = document.querySelector('[data-clear]');
 const delButton = document.querySelector('[data-delete]');
 const numButtons = document.querySelectorAll('[data-nums]');
@@ -47,6 +91,8 @@ const previousOperandText = document.querySelector('[data-previous-output]');
 const currentOperandText = document.querySelector('[data-current-output]');
 const decimal = document.querySelector('[data-decimal]');
 const plusMinus = document.querySelector('[data-plusminus]');
+
+window.addEventListener('keydown', keyboardInput);
 
 numButtons.forEach(button => {
     button.addEventListener('click', () => {  
@@ -64,7 +110,7 @@ operatorButtons.forEach(button => {
 
 equalButton.addEventListener('click', () => {
     compute();
-    updateDisplay();
+    finalDisplayUpdate();
 });
 
 clearButton.addEventListener('click', () => {
@@ -77,10 +123,12 @@ delButton.addEventListener('click', () => {
     updateDisplay();
 });
 
+let previous;
+let current;
 const compute = () => {
     let result;
-    const previous = parseFloat(previousOperand);
-    const current = parseFloat(currentOperand);
+    previous = parseFloat(previousOperand);
+    current = parseFloat(currentOperand);
     if (isNaN(previous) || isNaN(current)) return;
     switch (operator) {
         case '+':
@@ -93,7 +141,7 @@ const compute = () => {
             result = previous * current;
             break;
         case '÷':
-            if(current === 0) {
+            if (current === 0) {
                 result = 'Don\'t Divide By 0!';
             }
             else {
@@ -103,13 +151,11 @@ const compute = () => {
         default:
             throw new Error("Input Error");
     }
-    if(typeof(result) === 'number' ){
+    if (typeof(result) === 'number'){
         currentOperand = Math.round((result + Number.EPSILON) * 100) / 100;
     }
     else {
         currentOperand = result;
     }
-    operator = undefined;
-    previousOperand = '';
 }
 

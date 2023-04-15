@@ -9,6 +9,7 @@ body {
     min-height: 50vh;
     border: solid grey;
     border-radius: 15px;
+    margin:auto;
 }
 
 .span-2 {
@@ -51,7 +52,6 @@ button:hover {
     word-wrap: break-word;
     word-break: break-all;
     border-radius: 15px;
-    
 }
 
 .previous-output,
